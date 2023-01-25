@@ -245,6 +245,10 @@ void ZEDWrapperNodelet::onInit()
 
     mZedParams.enable_image_enhancement = true; // Always active
 
+    // TODO: check the file pointing
+    // mZedParams.optional_opencv_calibration_file = "/home/jingyu/frog/zed_test_ws/src/test.yaml";
+    // std::cout << "mZedParams.optional_opencv_calibration_file: " << mZedParams.optional_opencv_calibration_file << std::endl;
+
     mDiagUpdater.add("ZED Diagnostic", this, &ZEDWrapperNodelet::callback_updateDiagnostic);
     mDiagUpdater.setHardwareID("ZED camera");
 
