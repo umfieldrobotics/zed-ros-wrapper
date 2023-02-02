@@ -1,7 +1,7 @@
 # params/zedm_yaml
 # Parameters for Stereolabs ZED mini camera
 ---
-pub_frame_rate:             30.0                                # Dynamic - frequency of publishing of video and depth data
+pub_frame_rate:             4.0                                # Dynamic - frequency of publishing of video and depth data
 
 general:
     camera_model:               'zedm'
