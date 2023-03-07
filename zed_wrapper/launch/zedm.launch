@@ -52,5 +52,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <arg name="cam_yaw"             value="$(arg cam_yaw)" />
         </include>
     </group>
-    <node pkg="image_transport" type="republish" name="zed_compress" args="raw in:=/zedm/zed_node/left/image_rect_color compressed out:=/zed_rviz"/>
+    <!-- <node pkg="image_transport" type="republish" name="zed_compress" args="raw in:=/zedm/zed_node/left/image_rect_color compressed out:=/zed_rviz"/> -->
+    <!-- <node pkg="image_transport" type="republish" name="zed_compress" args="raw in:=/zedm/zed_node/right/image_rect_color compressed out:=/zed_rviz"/> -->
 </launch>

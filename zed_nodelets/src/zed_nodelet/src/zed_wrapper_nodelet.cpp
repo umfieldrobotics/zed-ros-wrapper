@@ -1740,8 +1740,9 @@ void ZEDWrapperNodelet::publishStaticImuFrame()
     if (mStaticImuFramePublished) {
         return;
     }
-
-    mStaticImuTransformStamped.header.stamp = ros::Time::now();
+    std::cout << "Publishing IMU TF as static TF" << std::endl;
+    // mStaticImuTransformStamped.header.stamp = ros::Time::now();
+    mStaticImuTransformStamped.header.stamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
     mStaticImuTransformStamped.header.frame_id = mLeftCamFrameId;
     mStaticImuTransformStamped.child_frame_id = mImuFrameId;
     sl::Translation sl_tr = mSlCamImuTransf.getTranslation();
@@ -2565,7 +2566,9 @@ void ZEDWrapperNodelet::callback_pubVideoDepth(const ros::TimerEvent& e)
     // ----> Data ROS timestamp
     ros::Time stamp = sl_tools::slTime2Ros(grab_ts);
     if (mSvoMode) {
-        stamp = ros::Time::now();
+        // @Song-Jingyu + @onurbagoren: SVO timestamp should be used for the rosbag we want to record!
+        // stamp = ros::Time::now();
+        stamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
     }
     // <---- Data ROS timestamp
 
@@ -3184,7 +3187,9 @@ void ZEDWrapperNodelet::device_poll_thread_func()
 
     // Timestamp initialization
     if (mSvoMode) {
-        mFrameTimestamp = ros::Time::now();
+        // mFrameTimestamp = ros::Time::now();
+        // @Song-Jingyu + @onurbagoren: similarly replace the timestamp from ros::Time::now() to the timestamp from the SVO file
+        mFrameTimestamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
     } else {
         mFrameTimestamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::CURRENT));
     }
@@ -3318,6 +3323,7 @@ void ZEDWrapperNodelet::device_poll_thread_func()
 
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
+                // Even though ros::Time::now() is used here, it requires to not be in svoMode, so don't need to worry about this one @Song-Jingyu
                 if ((ros::Time::now() - mPrevFrameTimestamp).toSec() > 5 && !mSvoMode) {
                     mCloseZedMutex.lock();
                     mZed.close();
@@ -3402,7 +3408,8 @@ void ZEDWrapperNodelet::device_poll_thread_func()
 
             // Timestamp
             if (mSvoMode) {
-                mFrameTimestamp = ros::Time::now();
+                // mFrameTimestamp = ros::Time::now();
+                mFrameTimestamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
             } else {
                 mFrameTimestamp = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
             }
@@ -3810,7 +3817,9 @@ void ZEDWrapperNodelet::device_poll_thread_func()
                     ros::Time t;
 
                     if (mSvoMode) {
-                        t = ros::Time::now();
+                        // t = ros::Time::now();
+                        // @Song-Jingyu @onurbagoren change here
+                        t = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::IMAGE));
                     } else {
                         t = sl_tools::slTime2Ros(mZed.getTimestamp(sl::TIME_REFERENCE::CURRENT));
                     }
@@ -4428,6 +4437,7 @@ void ZEDWrapperNodelet::clickedPtCallback(geometry_msgs::PointStampedConstPtr ms
     }
     // <---- Check for result subscribers
 
+    // This is ok
     ros::Time ts = ros::Time::now();
 
     float X = msg->point.x;
