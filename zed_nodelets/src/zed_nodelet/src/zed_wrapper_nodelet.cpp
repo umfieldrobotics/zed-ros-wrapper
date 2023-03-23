@@ -246,8 +246,8 @@ void ZEDWrapperNodelet::onInit()
     mZedParams.enable_image_enhancement = true; // Always active
 
     // TODO: check the file pointing
-    // mZedParams.optional_opencv_calibration_file = "/home/jingyu/frog/zed_test_ws/src/test.yaml";
-    // std::cout << "mZedParams.optional_opencv_calibration_file: " << mZedParams.optional_opencv_calibration_file << std::endl;
+    mZedParams.optional_opencv_calibration_file = "/frog-drive/bluerov/zed_calibration/calib_param_mhl.yml";
+    std::cout << "mZedParams.optional_opencv_calibration_file: " << mZedParams.optional_opencv_calibration_file << std::endl;
 
     mDiagUpdater.add("ZED Diagnostic", this, &ZEDWrapperNodelet::callback_updateDiagnostic);
     mDiagUpdater.setHardwareID("ZED camera");
@@ -2130,16 +2130,32 @@ void ZEDWrapperNodelet::fillCamInfo(sl::Camera& zed, sensor_msgs::CameraInfoPtr 
     rightCamInfoMsg->distortion_model = sensor_msgs::distortion_models::PLUMB_BOB;
     leftCamInfoMsg->D.resize(5);
     rightCamInfoMsg->D.resize(5);
+    // leftCamInfoMsg->D[0] = zedParam.left_cam.disto[0]; // k1
+    // leftCamInfoMsg->D[1] = zedParam.left_cam.disto[1]; // k2
+    // leftCamInfoMsg->D[2] = zedParam.left_cam.disto[4]; // k3
+    // leftCamInfoMsg->D[3] = zedParam.left_cam.disto[2]; // p1
+    // leftCamInfoMsg->D[4] = zedParam.left_cam.disto[3]; // p2
+
+    //Jingyu: wrong order - camera info message definition is http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/CameraInfo.html
     leftCamInfoMsg->D[0] = zedParam.left_cam.disto[0]; // k1
     leftCamInfoMsg->D[1] = zedParam.left_cam.disto[1]; // k2
-    leftCamInfoMsg->D[2] = zedParam.left_cam.disto[4]; // k3
-    leftCamInfoMsg->D[3] = zedParam.left_cam.disto[2]; // p1
-    leftCamInfoMsg->D[4] = zedParam.left_cam.disto[3]; // p2
+    leftCamInfoMsg->D[2] = zedParam.left_cam.disto[2]; // p1
+    leftCamInfoMsg->D[3] = zedParam.left_cam.disto[3]; // p2
+    leftCamInfoMsg->D[4] = zedParam.left_cam.disto[4]; // k3
+
+    // rightCamInfoMsg->D[0] = zedParam.right_cam.disto[0]; // k1
+    // rightCamInfoMsg->D[1] = zedParam.right_cam.disto[1]; // k2
+    // rightCamInfoMsg->D[2] = zedParam.right_cam.disto[4]; // k3
+    // rightCamInfoMsg->D[3] = zedParam.right_cam.disto[2]; // p1
+    // rightCamInfoMsg->D[4] = zedParam.right_cam.disto[3]; // p2
+
+    //Jingyu: wrong order - camera info message definition is http://docs.ros.org/en/noetic/api/sensor_msgs/html/msg/CameraInfo.html
     rightCamInfoMsg->D[0] = zedParam.right_cam.disto[0]; // k1
     rightCamInfoMsg->D[1] = zedParam.right_cam.disto[1]; // k2
-    rightCamInfoMsg->D[2] = zedParam.right_cam.disto[4]; // k3
-    rightCamInfoMsg->D[3] = zedParam.right_cam.disto[2]; // p1
-    rightCamInfoMsg->D[4] = zedParam.right_cam.disto[3]; // p2
+    rightCamInfoMsg->D[2] = zedParam.right_cam.disto[2]; // p1
+    rightCamInfoMsg->D[3] = zedParam.right_cam.disto[3]; // p2
+    rightCamInfoMsg->D[4] = zedParam.right_cam.disto[4]; // k3
+
     leftCamInfoMsg->K.fill(0.0);
     rightCamInfoMsg->K.fill(0.0);
     leftCamInfoMsg->K[0] = static_cast<double>(zedParam.left_cam.fx);

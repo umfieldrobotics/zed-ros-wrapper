@@ -1,0 +1,23 @@
+<!-- ROS_NAMESPACE=stereo rosrun stereo_image_proc stereo_image_proc -->
+
+<launch>
+
+    <node name="stereo_proc" pkg="stereo_image_proc" type="stereo_image_proc" output="screen" required="true">
+        <!-- set namespace -->
+        <!-- <arg name="namespace" value="stereo" />  -->
+
+        <!-- add remap -->
+        <!-- <remap from="/zedm/zed_node/left_raw/image_raw_color" to="/stereo/left/image_raw" />
+        <remap from="/zedm/zed_node/right_raw/image_raw_color" to="/stereo/right/image_raw" /> -->
+        <!-- camera info -->
+        <!-- <remap from="/zedm/zed_node/left_raw/camera_info" to="/stereo/left/camera_info" /> -->
+        <!-- <remap from="/zedm/zed_node/right_raw/camera_info" to="/stereo/right/camera_info" /> -->
+
+        <!-- change the above order -->
+        <remap from="/stereo/left/image_raw" to="/zedm/zed_node/left_raw/image_raw_color" />
+        <remap from="/stereo/right/image_raw" to="/zedm/zed_node/right_raw/image_raw_color" />
+        <!-- camera info -->
+        <remap from="/stereo/left/camera_info" to="/zedm/zed_node/left_raw/camera_info" />
+        <remap from="/stereo/right/camera_info" to="/zedm/zed_node/right_raw/camera_info" />
+    </node>
+</launch>

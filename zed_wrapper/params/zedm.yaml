@@ -1,7 +1,7 @@
 # params/zedm_yaml
 # Parameters for Stereolabs ZED mini camera
 ---
-pub_frame_rate:             4.0                                # Dynamic - frequency of publishing of video and depth data
+pub_frame_rate:             2.0                                # Dynamic - frequency of publishing of video and depth data
 
 general:
     camera_model:               'zedm'
@@ -10,6 +10,7 @@ general:
 
 
 depth:
+    mode:                       3               # use ultra
     min_depth:                  0.35            # Min: 0.1, Max: 3.0 - Default 0.3 - Note: reducing this value wil require more computational power and GPU memory
     max_depth:                  10.0            # Max: 20.0
 
